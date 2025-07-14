@@ -109,7 +109,13 @@ def generate_food_position(snake: List[Position], board_size: int = 20) -> Posit
             x=random.randint(0, board_size - 1),
             y=random.randint(0, board_size - 1)
         )
-        if food not in snake:
+        # Check if food position collides with any snake segment
+        collision = False
+        for segment in snake:
+            if food.x == segment.x and food.y == segment.y:
+                collision = True
+                break
+        if not collision:
             return food
 
 def check_collision(head: Position, snake_body: List[Position], board_size: int = 20) -> bool:
