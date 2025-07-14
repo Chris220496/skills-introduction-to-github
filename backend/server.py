@@ -165,7 +165,13 @@ def generate_power_up(snake: List[Position], food: Position, board_size: int = 2
             x=random.randint(0, board_size - 1),
             y=random.randint(0, board_size - 1)
         )
-        if position not in snake and position != food:
+        # Check if power-up position collides with snake or food
+        collision = False
+        for segment in snake:
+            if position.x == segment.x and position.y == segment.y:
+                collision = True
+                break
+        if not collision and not (position.x == food.x and position.y == food.y):
             return {
                 "type": random.choice(power_up_types),
                 "position": position.dict(),
