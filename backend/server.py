@@ -118,9 +118,10 @@ def check_collision(head: Position, snake_body: List[Position], board_size: int 
     if head.x < 0 or head.x >= board_size or head.y < 0 or head.y >= board_size:
         return True
     
-    # Check self collision
-    if head in snake_body[1:]:  # Exclude head itself
-        return True
+    # Check self collision - compare position coordinates
+    for segment in snake_body[1:]:  # Exclude head itself
+        if head.x == segment.x and head.y == segment.y:
+            return True
     
     return False
 
