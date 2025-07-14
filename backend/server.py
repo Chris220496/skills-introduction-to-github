@@ -233,7 +233,7 @@ async def move_snake_api(request: MoveRequest):
         return {"game_over": True, "final_score": game_state.score}
     
     # Check if food eaten
-    if new_snake[0] == game_state.food:
+    if new_snake[0].x == game_state.food.x and new_snake[0].y == game_state.food.y:
         ate_food = True
         game_state.score += 10
         if game_state.game_mode == "speed":
