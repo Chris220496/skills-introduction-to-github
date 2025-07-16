@@ -419,38 +419,62 @@ const SnakeGame = () => {
 
         <div className="game-controls">
           <div className="controls-info">
-            <p>Use arrow keys or WASD to move</p>
-            <p>Or use the buttons below on mobile</p>
+            <p>🎮 Use arrow keys or WASD to move</p>
+            <p>📱 Or use the buttons below on mobile</p>
           </div>
           
           <div className="mobile-controls">
             <div className="control-row">
               <button 
-                className="control-btn"
+                className="control-btn control-btn-up"
                 onClick={() => handleTouchMove('up')}
+                onTouchStart={() => handleTouchMove('up')}
               >
-                ↑
+                <span className="control-arrow">▲</span>
+                <span className="control-text">UP</span>
+              </button>
+            </div>
+            <div className="control-row control-row-middle">
+              <button 
+                className="control-btn control-btn-left"
+                onClick={() => handleTouchMove('left')}
+                onTouchStart={() => handleTouchMove('left')}
+              >
+                <span className="control-arrow">◀</span>
+                <span className="control-text">LEFT</span>
+              </button>
+              <div className="control-center">
+                <div className="snake-icon">🐍</div>
+              </div>
+              <button 
+                className="control-btn control-btn-right"
+                onClick={() => handleTouchMove('right')}
+                onTouchStart={() => handleTouchMove('right')}
+              >
+                <span className="control-arrow">▶</span>
+                <span className="control-text">RIGHT</span>
               </button>
             </div>
             <div className="control-row">
               <button 
-                className="control-btn"
-                onClick={() => handleTouchMove('left')}
-              >
-                ←
-              </button>
-              <button 
-                className="control-btn"
+                className="control-btn control-btn-down"
                 onClick={() => handleTouchMove('down')}
+                onTouchStart={() => handleTouchMove('down')}
               >
-                ↓
+                <span className="control-arrow">▼</span>
+                <span className="control-text">DOWN</span>
               </button>
-              <button 
-                className="control-btn"
-                onClick={() => handleTouchMove('right')}
-              >
-                →
-              </button>
+            </div>
+          </div>
+          
+          <div className="control-hints">
+            <div className="hint-row">
+              <span className="hint-key">W A S D</span>
+              <span className="hint-text">Keyboard Controls</span>
+            </div>
+            <div className="hint-row">
+              <span className="hint-key">↑ ↓ ← →</span>
+              <span className="hint-text">Arrow Keys</span>
             </div>
           </div>
         </div>
