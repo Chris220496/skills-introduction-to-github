@@ -1,12 +1,10 @@
-import { Canvas, CanvasRenderingContext2D } from 'react-native-canvas';
-
 export class SpriteRenderer {
-  private canvas: Canvas;
+  private canvas: HTMLCanvasElement;
   private sprites: Map<string, HTMLCanvasElement> = new Map();
   private loadedSprites: number = 0;
   private totalSprites: number = 0;
 
-  constructor(canvas: Canvas) {
+  constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.initializeSprites();
   }

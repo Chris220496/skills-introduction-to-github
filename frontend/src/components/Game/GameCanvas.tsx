@@ -1,15 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Dimensions, PanResponder, GestureResponderEvent, PanResponderGestureState } from 'react-native';
-import { Canvas, CanvasRenderingContext2D } from 'react-native-canvas';
-import { Player, NPC, Enemy, Item, GameMap, Camera, TouchControls, Particle, GameState } from '../../types/GameTypes';
+import { Player, NPC, Enemy, Item, GameMap, Camera, Particle, GameState } from '../../types/GameTypes';
 import { mockData } from '../../data/mockData';
 import { SpriteRenderer } from './SpriteRenderer';
-import TouchControlsComponent from './TouchControls';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const CANVAS_WIDTH = screenWidth;
-const CANVAS_HEIGHT = screenHeight - 200; // Space for controls
 const TILE_SIZE = 32;
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
 
 interface GameCanvasProps {
   gameState: GameState;
@@ -18,10 +14,11 @@ interface GameCanvasProps {
 }
 
 const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, onNPCInteraction }) => {
-  const canvasRef = useRef<Canvas>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const [spriteRenderer, setSpriteRenderer] = useState<SpriteRenderer | null>(null);
   const [loading, setLoading] = useState(true);
+  const [keys, setKeys] = useState<{[key: string]: boolean}>({});
   
   const [camera, setCamera] = useState<Camera>({ x: 0, y: 0 });
   const [player, setPlayer] = useState<Player>({
@@ -38,11 +35,6 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, o
     animationFrame: 0,
     lastAnimation: 0,
     gold: 150
-  });
-
-  const [touchControls, setTouchControls] = useState<TouchControls>({
-    joystick: { x: 0, y: 0, active: false },
-    actionButtons: { attack: false, interact: false, inventory: false }
   });
 
   const [currentMap] = useState<GameMap>(mockData.maps[0]);
@@ -73,6 +65,34 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, o
     }
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      setKeys(prev => ({ ...prev, [e.key]: true }));
+      
+      // Handle interactions
+      if (e.key === 'e' || e.key === 'E') {
+        checkNPCInteraction();
+      }
+      
+      // Handle UI toggle
+      if (e.key === 'i' || e.key === 'I') {
+        onGameStateChange({ showUI: !gameState.showUI });
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      setKeys(prev => ({ ...prev, [e.key]: false }));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [gameState.showUI, onGameStateChange]);
+
   const startGameLoop = () => {
     const gameLoop = (timestamp: number) => {
       if (!loading && spriteRenderer) {
@@ -84,59 +104,52 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, o
     gameLoop(0);
   };
 
+  const checkNPCInteraction = () => {
+    const interactionDistance = 50;
+    
+    npcs.forEach(npc => {
+      const distance = Math.sqrt(
+        Math.pow(player.x - npc.x, 2) + Math.pow(player.y - npc.y, 2)
+      );
+      
+      if (distance < interactionDistance) {
+        onNPCInteraction(npc);
+      }
+    });
+  };
+
   const update = (timestamp: number) => {
     let newPlayer = { ...player };
     let isMoving = false;
     const speed = 3;
 
-    // Touch controls movement
-    if (touchControls.joystick.active) {
-      const magnitude = Math.sqrt(
-        touchControls.joystick.x * touchControls.joystick.x +
-        touchControls.joystick.y * touchControls.joystick.y
-      );
-      
-      if (magnitude > 0.1) {
-        const normalizedX = touchControls.joystick.x / magnitude;
-        const normalizedY = touchControls.joystick.y / magnitude;
-        
-        newPlayer.x += normalizedX * speed;
-        newPlayer.y += normalizedY * speed;
-        
-        // Set direction based on movement
-        if (Math.abs(normalizedX) > Math.abs(normalizedY)) {
-          newPlayer.direction = normalizedX > 0 ? 'right' : 'left';
-        } else {
-          newPlayer.direction = normalizedY > 0 ? 'down' : 'up';
-        }
-        
-        isMoving = true;
-      }
+    // Movement
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) {
+      newPlayer.y -= speed;
+      newPlayer.direction = 'up';
+      isMoving = true;
+    }
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) {
+      newPlayer.y += speed;
+      newPlayer.direction = 'down';
+      isMoving = true;
+    }
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) {
+      newPlayer.x -= speed;
+      newPlayer.direction = 'left';
+      isMoving = true;
+    }
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) {
+      newPlayer.x += speed;
+      newPlayer.direction = 'right';
+      isMoving = true;
     }
 
     // Attack
-    if (touchControls.actionButtons.attack && newPlayer.attackCooldown <= 0) {
+    if (keys[' '] && newPlayer.attackCooldown <= 0) {
       newPlayer.isAttacking = true;
       newPlayer.attackCooldown = 30;
       createAttackParticles(newPlayer.x, newPlayer.y, newPlayer.direction);
-    }
-
-    // Interact
-    if (touchControls.actionButtons.interact) {
-      checkNPCInteraction();
-      setTouchControls(prev => ({
-        ...prev,
-        actionButtons: { ...prev.actionButtons, interact: false }
-      }));
-    }
-
-    // Inventory
-    if (touchControls.actionButtons.inventory) {
-      onGameStateChange({ showUI: !gameState.showUI });
-      setTouchControls(prev => ({
-        ...prev,
-        actionButtons: { ...prev.actionButtons, inventory: false }
-      }));
     }
 
     if (newPlayer.attackCooldown > 0) {
@@ -173,20 +186,6 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, o
     updateEnemies();
 
     setPlayer(newPlayer);
-  };
-
-  const checkNPCInteraction = () => {
-    const interactionDistance = 50;
-    
-    npcs.forEach(npc => {
-      const distance = Math.sqrt(
-        Math.pow(player.x - npc.x, 2) + Math.pow(player.y - npc.y, 2)
-      );
-      
-      if (distance < interactionDistance) {
-        onNPCInteraction(npc);
-      }
-    });
   };
 
   const createAttackParticles = (x: number, y: number, direction: string) => {
@@ -356,6 +355,20 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, o
           ctx.textAlign = 'center';
           ctx.fillText('!', drawX + 16, drawY - 4);
         }
+
+        // Draw interaction prompt when near
+        const distance = Math.sqrt(
+          Math.pow(player.x - npc.x, 2) + Math.pow(player.y - npc.y, 2)
+        );
+        
+        if (distance < 50) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+          ctx.fillRect(drawX - 8, drawY - 32, 48, 16);
+          ctx.fillStyle = '#FFF';
+          ctx.font = '12px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText('Pulsa E', drawX + 16, drawY - 20);
+        }
       }
     });
   };
@@ -448,53 +461,70 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onGameStateChange, o
     ctx.fillRect(10, 40, 200, 20);
     ctx.fillStyle = '#FFF';
     ctx.fillText(`Nivel: ${player.level} | EXP: ${player.exp}`, 16, 54);
-  };
 
-  const handleJoystickMove = (x: number, y: number) => {
-    setTouchControls(prev => ({
-      ...prev,
-      joystick: { x, y, active: true }
-    }));
-  };
-
-  const handleJoystickRelease = () => {
-    setTouchControls(prev => ({
-      ...prev,
-      joystick: { x: 0, y: 0, active: false }
-    }));
-  };
-
-  const handleActionButton = (action: 'attack' | 'interact' | 'inventory') => {
-    setTouchControls(prev => ({
-      ...prev,
-      actionButtons: { ...prev.actionButtons, [action]: true }
-    }));
+    // Draw controls
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(10, CANVAS_HEIGHT - 90, 300, 80);
+    ctx.fillStyle = '#FFF';
+    ctx.font = '12px Arial';
+    ctx.fillText('WASD/Flechas: Mover', 16, CANVAS_HEIGHT - 70);
+    ctx.fillText('Espacio: Atacar', 16, CANVAS_HEIGHT - 55);
+    ctx.fillText('E: Interactuar', 16, CANVAS_HEIGHT - 40);
+    ctx.fillText('I: Inventario', 16, CANVAS_HEIGHT - 25);
   };
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a1a2e' }}>
-        {/* Loading screen would go here */}
-      </View>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: CANVAS_WIDTH, 
+        height: CANVAS_HEIGHT, 
+        backgroundColor: '#1a1a2e',
+        color: '#f39c12',
+        fontSize: '24px',
+        fontFamily: 'Arial'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>🦊</div>
+          <div>Cargando Aventura...</div>
+          <div style={{ 
+            width: '200px', 
+            height: '8px', 
+            backgroundColor: '#333', 
+            borderRadius: '4px',
+            margin: '20px auto',
+            overflow: 'hidden'
+          }}>
+            <div style={{ 
+              width: `${spriteRenderer ? spriteRenderer.getLoadProgress() : 0}%`,
+              height: '100%',
+              backgroundColor: '#f39c12',
+              transition: 'width 0.3s ease'
+            }} />
+          </div>
+          <div style={{ fontSize: '14px' }}>
+            {spriteRenderer ? Math.round(spriteRenderer.getLoadProgress()) : 0}%
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Canvas
+    <div style={{ display: 'inline-block', border: '2px solid #333' }}>
+      <canvas
         ref={canvasRef}
-        style={{
-          width: CANVAS_WIDTH,
-          height: CANVAS_HEIGHT,
-          backgroundColor: '#1a1a2e'
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        style={{ 
+          imageRendering: 'pixelated',
+          background: 'linear-gradient(45deg, #1a1a2e, #16213e)',
+          display: 'block'
         }}
       />
-      <TouchControlsComponent
-        onJoystickMove={handleJoystickMove}
-        onJoystickRelease={handleJoystickRelease}
-        onActionButton={handleActionButton}
-      />
-    </View>
+    </div>
   );
 };
 

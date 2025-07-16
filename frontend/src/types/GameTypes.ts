@@ -135,16 +135,3 @@ export interface Camera {
   x: number;
   y: number;
 }
-
-export interface TouchControls {
-  joystick: {
-    x: number;
-    y: number;
-    active: boolean;
-  };
-  actionButtons: {
-    attack: boolean;
-    interact: boolean;
-    inventory: boolean;
-  };
-}
