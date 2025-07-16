@@ -379,6 +379,10 @@ body {
 .game-controls {
   text-align: center;
   margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
 }
 
 .controls-info {
@@ -386,43 +390,157 @@ body {
 }
 
 .controls-info p {
-  margin: 5px 0;
-  color: #ccc;
+  margin: 8px 0;
+  color: #fff;
+  font-size: 1rem;
 }
 
 .mobile-controls {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .control-row {
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-row-middle {
+  gap: 20px;
 }
 
 .control-btn {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  background: linear-gradient(145deg, #667eea, #764ba2);
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .control-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(145deg, #764ba2, #667eea);
 }
 
 .control-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #5a67d8, #6b46c1);
+}
+
+.control-btn-up {
+  background: linear-gradient(145deg, #48bb78, #38a169);
+}
+
+.control-btn-up:hover {
+  background: linear-gradient(145deg, #38a169, #48bb78);
+}
+
+.control-btn-down {
+  background: linear-gradient(145deg, #ed8936, #dd6b20);
+}
+
+.control-btn-down:hover {
+  background: linear-gradient(145deg, #dd6b20, #ed8936);
+}
+
+.control-btn-left {
+  background: linear-gradient(145deg, #4299e1, #3182ce);
+}
+
+.control-btn-left:hover {
+  background: linear-gradient(145deg, #3182ce, #4299e1);
+}
+
+.control-btn-right {
+  background: linear-gradient(145deg, #ed64a6, #d53f8c);
+}
+
+.control-btn-right:hover {
+  background: linear-gradient(145deg, #d53f8c, #ed64a6);
+}
+
+.control-arrow {
+  font-size: 1.8rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.control-text {
+  font-size: 0.7rem;
+  opacity: 0.9;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.control-center {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.snake-icon {
+  font-size: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.control-hints {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hint-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.hint-key {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: #ffd700;
+  font-size: 0.9rem;
+}
+
+.hint-text {
+  font-size: 0.8rem;
+  color: #ccc;
 }
 
 /* Power-ups Info */
