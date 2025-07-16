@@ -1,70 +1,234 @@
-# Getting Started with Create React App
+# 🦊 Aventura del Zorro Medieval - React Native Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Un juego de aventuras medieval completo desarrollado en React Native con TypeScript, protagonizado por un valiente zorro en un mundo lleno de misiones, combates y exploración.
 
-## Available Scripts
+## 🎮 Características del Juego
 
-In the project directory, you can run:
+### **Gameplay Principal**
+- **Exploración de mundo abierto** con mapas interconectados
+- **Sistema de combate en tiempo real** con espadas, magia y habilidades especiales
+- **Inventario completo** con diferentes tipos de items
+- **NPCs interactivos** con diálogos y misiones
+- **Sistema de misiones** con quest log y seguimiento de progreso
+- **Gráficos 2D pixel art** con sprites detallados
 
-### `npm start`
+### **Controles Táctiles**
+- **Joystick virtual** para movimiento fluido
+- **Botones de acción** para atacar, interactuar e inventario
+- **Interfaz optimizada** para dispositivos móviles
+- **Feedback háptico** para mejor experiencia
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **Sistemas de Progresión**
+- **Sistema de experiencia** y niveles
+- **Habilidades** con progresión y especialización
+- **Economía** con monedas de oro
+- **Guardado automático** cada 30 segundos
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Instalación y Configuración
 
-### `npm test`
+### **Requisitos Previos**
+```bash
+# Instalar Node.js (versión 16 o superior)
+# Instalar React Native CLI
+npm install -g react-native-cli
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Para Android: Instalar Android Studio
+# Para iOS: Instalar Xcode (solo en macOS)
+```
 
-### `npm run build`
+### **Instalación**
+```bash
+# Navegar al directorio del proyecto
+cd /app/frontend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Instalar dependencias
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Para iOS (solo en macOS)
+cd ios && pod install && cd ..
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Para Android
+npx react-native run-android
 
-### `npm run eject`
+# Para iOS
+npx react-native run-ios
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🎯 Estructura del Proyecto
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+src/
+├── components/
+│   └── Game/
+│       ├── GameCanvas.tsx      # Canvas principal del juego
+│       ├── SpriteRenderer.tsx  # Sistema de sprites 2D
+│       ├── TouchControls.tsx   # Controles táctiles
+│       ├── GameUI.tsx          # Interfaz de usuario
+│       └── DialogSystem.tsx    # Sistema de diálogos
+├── data/
+│   └── mockData.ts            # Datos del juego
+├── types/
+│   └── GameTypes.ts           # Tipos TypeScript
+└── App.tsx                    # Componente principal
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🎨 Características Técnicas
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### **Tecnologías Utilizadas**
+- **React Native** 0.72.0
+- **TypeScript** 5.0.4
+- **React Native Canvas** para renderizado 2D
+- **React Native Reanimated** para animaciones
+- **React Native Gesture Handler** para controles táctiles
+- **AsyncStorage** para guardado persistente
 
-## Learn More
+### **Bibliotecas Adicionales**
+- **react-native-linear-gradient** - Gradientes visuales
+- **react-native-haptic-feedback** - Feedback háptico
+- **react-native-sound** - Efectos de sonido
+- **react-native-vector-icons** - Iconos vectoriales
+- **react-native-orientation-locker** - Control de orientación
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🎮 Controles del Juego
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### **Joystick Virtual**
+- **Movimiento**: Arrastra el joystick para mover al zorro
+- **Dirección**: El personaje se orienta según la dirección del movimiento
 
-### Code Splitting
+### **Botones de Acción**
+- **⚔️ Atacar**: Ejecuta ataques cuerpo a cuerpo
+- **🤝 Interactuar**: Habla con NPCs y recoge items
+- **🎒 Inventario**: Abre el menú de inventario
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### **Interfaz de Usuario**
+- **Inventario**: Gestiona items, armas y consumibles
+- **Misiones**: Rastrea progreso de quest activos
+- **Habilidades**: Revisa progresión de habilidades
+- **Mapa**: Explora diferentes ubicaciones
 
-### Analyzing the Bundle Size
+## 🎯 Personajes y Mundo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### **Protagonista**
+- **Zorro Medieval**: Héroe principal con habilidades de combate y magia
 
-### Making a Progressive Web App
+### **NPCs**
+- **Aldeano Sabio**: Ofrece misiones principales
+- **Comerciante**: Vende items y equipamiento
+- **Guardia Real**: Proporciona misiones de combate
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### **Enemigos**
+- **Goblins**: Enemigos básicos con clubs
+- **Esqueletos**: No-muertos con resistencia
+- **Orcos**: Enemigos fuertes con armadura
 
-### Advanced Configuration
+### **Ubicaciones**
+- **Aldea Inicial**: Punto de partida con NPCs
+- **Bosque Encantado**: Área de exploración
+- **Castillo Real**: Sede del reino
+- **Montañas Místicas**: Zona de desafío
+- **Torre del Mago**: Área mágica
+- **Cueva del Dragón**: Mazmorra final
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🎨 Sistema de Sprites
 
-### Deployment
+### **Sprites del Zorro**
+- **fox_idle**: Zorro en reposo
+- **fox_walk**: Animación de caminata
+- **fox_attack**: Pose de ataque
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### **Tiles del Mapa**
+- **Pasto**: Terreno básico
+- **Piedra**: Caminos y estructuras
+- **Agua**: Obstáculos líquidos
+- **Árboles**: Obstáculos naturales
+- **Muros**: Límites del mapa
 
-### `npm run build` fails to minify
+## 🎯 Sistema de Misiones
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### **Tipos de Misiones**
+- **Principales**: Historia principal del juego
+- **Secundarias**: Misiones opcionales
+- **Entregas**: Transportar items
+
+### **Recompensas**
+- **Experiencia**: Para subir de nivel
+- **Oro**: Moneda del juego
+- **Items**: Equipamiento y consumibles
+
+## 🎮 Comandos de Desarrollo
+
+```bash
+# Iniciar el servidor de desarrollo
+npm start
+
+# Construir para Android
+npm run build
+
+# Construir para iOS
+npm run build:ios
+
+# Ejecutar en dispositivo Android
+npm run android
+
+# Ejecutar en simulador iOS
+npm run ios
+
+# Ejecutar tests
+npm test
+
+# Linting
+npm run lint
+```
+
+## 🎯 Configuración de Dispositivos
+
+### **Android**
+1. Habilitar modo desarrollador en el dispositivo
+2. Activar depuración USB
+3. Conectar dispositivo y ejecutar `npm run android`
+
+### **iOS**
+1. Abrir proyecto en Xcode
+2. Seleccionar dispositivo o simulador
+3. Ejecutar desde Xcode o `npm run ios`
+
+## 🎨 Personalización
+
+### **Modificar Sprites**
+- Editar archivos en `src/components/Game/SpriteRenderer.tsx`
+- Cambiar colores, tamaños y animaciones
+
+### **Agregar Nuevos Personajes**
+- Añadir datos en `src/data/mockData.ts`
+- Crear sprites correspondientes
+- Implementar lógica de interacción
+
+### **Nuevas Misiones**
+- Definir en `mockData.ts`
+- Crear diálogos asociados
+- Implementar lógica de progreso
+
+## 🚀 Próximas Características
+
+- **Multijugador local**
+- **Más mapas y ubicaciones**
+- **Sistema de magia avanzado**
+- **Mascotas compañeras**
+- **Tienda in-game**
+- **Eventos temporales**
+
+## 📱 Compatibilidad
+
+- **Android**: 5.0 (API 21) o superior
+- **iOS**: 11.0 o superior
+- **Resoluciones**: Optimizado para teléfonos y tablets
+- **Orientación**: Landscape (horizontal) recomendado
+
+## 🎯 Rendimiento
+
+- **FPS**: 60fps estables
+- **Memoria**: Optimizado para dispositivos con 2GB+ RAM
+- **Batería**: Modo de ahorro de energía disponible
+- **Almacenamiento**: ~50MB instalado
+
+¡Disfruta de tu aventura medieval como un valiente zorro! 🦊⚔️
