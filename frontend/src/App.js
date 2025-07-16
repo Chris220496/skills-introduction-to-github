@@ -223,6 +223,8 @@ const SnakeGame = () => {
 
   // Touch controls for mobile
   const handleTouchMove = (direction) => {
+    console.log('Touch move:', direction, 'Game playing:', gameState.isPlaying);
+    
     if (!gameState.isPlaying) return;
     
     const lastDirection = moveQueueRef.current.length > 0 
@@ -240,8 +242,69 @@ const SnakeGame = () => {
     
     if (moveQueueRef.current.length < 2) {
       moveQueueRef.current.push(direction);
+      console.log('Touch direction added to queue:', direction);
     }
   };
+
+  // Swipe gestures for mobile
+  useEffect(() => {
+    if (!gameState.isPlaying) return;
+
+    let startX = 0;
+    let startY = 0;
+
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+      if (!startX || !startY) return;
+
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+
+      const diffX = startX - endX;
+      const diffY = startY - endY;
+
+      // Minimum swipe distance
+      const minSwipeDistance = 50;
+
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Horizontal swipe
+        if (Math.abs(diffX) > minSwipeDistance) {
+          if (diffX > 0) {
+            handleTouchMove('left');
+          } else {
+            handleTouchMove('right');
+          }
+        }
+      } else {
+        // Vertical swipe
+        if (Math.abs(diffY) > minSwipeDistance) {
+          if (diffY > 0) {
+            handleTouchMove('up');
+          } else {
+            handleTouchMove('down');
+          }
+        }
+      }
+
+      startX = 0;
+      startY = 0;
+    };
+
+    const gameBoard = document.querySelector('.game-board');
+    if (gameBoard) {
+      gameBoard.addEventListener('touchstart', handleTouchStart);
+      gameBoard.addEventListener('touchend', handleTouchEnd);
+
+      return () => {
+        gameBoard.removeEventListener('touchstart', handleTouchStart);
+        gameBoard.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [gameState.isPlaying]);
 
   // Reset game
   const resetGame = () => {
