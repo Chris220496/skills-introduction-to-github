@@ -177,12 +177,17 @@ const SnakeGame = () => {
   // Handle keyboard input
   useEffect(() => {
     const handleKeyPress = (e) => {
-      e.preventDefault();
-      
+      // Only handle game controls when playing
       if (!gameState.isPlaying) return;
+      
+      // Don't interfere with input fields
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       
       const newDirection = DIRECTIONS[e.code];
       if (!newDirection) return;
+      
+      // Prevent default only for game control keys
+      e.preventDefault();
       
       const lastDirection = moveQueueRef.current.length > 0 
         ? moveQueueRef.current[moveQueueRef.current.length - 1]
