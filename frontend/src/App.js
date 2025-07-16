@@ -177,6 +177,8 @@ const SnakeGame = () => {
   // Handle keyboard input
   useEffect(() => {
     const handleKeyPress = (e) => {
+      console.log('Key pressed:', e.code, 'Game playing:', gameState.isPlaying);
+      
       // Only handle game controls when playing
       if (!gameState.isPlaying) return;
       
@@ -184,6 +186,8 @@ const SnakeGame = () => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       
       const newDirection = DIRECTIONS[e.code];
+      console.log('New direction:', newDirection);
+      
       if (!newDirection) return;
       
       // Prevent default only for game control keys
@@ -201,11 +205,15 @@ const SnakeGame = () => {
         right: 'left'
       };
       
-      if (opposites[newDirection] === lastDirection) return;
+      if (opposites[newDirection] === lastDirection) {
+        console.log('Cannot reverse direction');
+        return;
+      }
       
       // Add to move queue (max 2 moves ahead)
       if (moveQueueRef.current.length < 2) {
         moveQueueRef.current.push(newDirection);
+        console.log('Direction added to queue:', newDirection);
       }
     };
 
